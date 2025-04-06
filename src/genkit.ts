@@ -1,7 +1,11 @@
 import { gemini20Flash, googleAI } from '@genkit-ai/googleai';
 import { genkit } from 'genkit';
 import { z } from '@genkit-ai/core';
-import { MenuItemSchema } from './app/output-schema/menu-item-schema';
+import {
+  GameCharactersSchema,
+  MenuItemSchema,
+} from './app/output-schema/menu-item.schema';
+import { parse, Allow } from 'partial-json';
 
 const ai = genkit({
   plugins: [googleAI()],
@@ -16,10 +20,10 @@ export const menuSuggestionFlow = ai.defineFlow(
   },
   async (restaurantTheme) => {
     const { text } = await ai.generate(
-      `Invent a menu item for a ${restaurantTheme} themed restaurant.`
+      `Invent a menu item for a ${restaurantTheme} themed restaurant.`,
     );
     return text;
-  }
+  },
 );
 
 export const structuredMenuSuggestionFlow = ai.defineFlow(
@@ -39,5 +43,45 @@ export const structuredMenuSuggestionFlow = ai.defineFlow(
     }
 
     return output;
-  }
+  },
 );
+
+export const streamCharacters = ai.defineFlow(
+  {
+    name: 'streamCharacters',
+    inputSchema: z.number(),
+    outputSchema: z.string(),
+    streamSchema: GameCharactersSchema,
+  },
+  async (count, { sendChunk }) => {
+    const { response, stream } = await ai.generateStream({
+      model: gemini20Flash,
+      output: {
+        format: 'json',
+        schema: GameCharactersSchema,
+      },
+      config: {
+        temperature: 1,
+      },
+      prompt: `Respond as JSON only. Generate ${count} different RPG game characters.`,
+    });
+
+    let buffer = '';
+    for await (const chunk of stream) {
+      buffer += chunk.content[0].text!;
+      if (buffer.length > 10) {
+        sendChunk(parse(maybeStripMarkdown(buffer), Allow.ALL));
+      }
+    }
+    return (await response).text;
+  },
+);
+
+const markdownRegex = /^\s*(```json)?((.|\n)*?)(```)?\s*$/i;
+function maybeStripMarkdown(withMarkdown: string) {
+  const mdMatch = markdownRegex.exec(withMarkdown);
+  if (!mdMatch) {
+    return withMarkdown;
+  }
+  return mdMatch[2];
+}

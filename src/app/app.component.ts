@@ -1,31 +1,17 @@
-import { Component, resource, signal } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { runFlow } from 'genkit/beta/client';
-import { MenuItemSchema } from './output-schema/menu-item-schema';
-import { JsonPipe } from '@angular/common';
+import { Component } from '@angular/core';
+import { RouterOutlet, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [FormsModule, JsonPipe],
-  templateUrl: './app.component.html',
+  imports: [RouterOutlet, RouterLink],
+  template: ` <h1>Genkit Examples</h1>
+    <nav>
+      <ul>
+        <li><a routerLink="/basic">Basic</a></li>
+        <li><a routerLink="/structured">Structured</a></li>
+        <li><a routerLink="/streaming">Streaming</a></li>
+      </ul>
+    </nav>
+    <router-outlet />`,
 })
-export class AppComponent {
-  menuInput = '';
-  structuredMenuInput = '';
-  theme = signal('');
-  structuredMenuTheme = signal('');
-
-  menuResource = resource({
-    request: () => this.theme(),
-    loader: ({ request }) => runFlow<string>({ url: 'menu', input: request }),
-  });
-
-  structuredMenuResource = resource({
-    request: () => this.structuredMenuTheme(),
-    loader: ({ request }) =>
-      runFlow<typeof MenuItemSchema>({
-        url: 'structured-menu',
-        input: request,
-      }),
-  });
-}
+export class AppComponent {}
