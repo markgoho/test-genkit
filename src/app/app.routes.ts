@@ -20,4 +20,8 @@ export const routes: Routes = [
         (m) => m.StreamingExampleComponent,
       ),
   },
+  {
+    path: '**',
+    redirectTo: 'basic',
+  },
 ];

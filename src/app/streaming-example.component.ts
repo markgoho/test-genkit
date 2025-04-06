@@ -7,19 +7,17 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { streamFlow } from 'genkit/beta/client';
-import { ResourceLoaderParams, ResourceStreamItem } from '@angular/core';
-import { JsonPipe } from '@angular/common';
+import { ResourceLoaderParams } from '@angular/core';
 import { GameCharacters } from './output-schema/menu-item.schema';
 
 type StreamItem = { value: GameCharacters };
-type StreamItemSignal = WritableSignal<StreamItem>;
 
 @Component({
-  imports: [FormsModule, JsonPipe],
+  imports: [FormsModule],
   standalone: true,
   selector: 'app-streaming-example',
   template: `
-    <h3>Stream JSON from LLM</h3>
+    <h2>Stream JSON from LLM</h2>
     This is a Game Character Generator.<br />
     How many game characters do you need?
     <input type="number" [(ngModel)]="count" />
@@ -28,7 +26,8 @@ type StreamItemSignal = WritableSignal<StreamItem>;
     @let characters = gameCharactersResource.value();
 
     @for (character of characters; track character.name) {
-      {{ character | json }}
+      <h2>{{ character.name }}</h2>
+      <p>{{ character.description }}</p>
     }
   `,
   styles: [
@@ -58,23 +57,7 @@ export class StreamingExampleComponent {
       const count = parseInt(request);
       const gameCharacters = signal<StreamItem>({ value: [] });
 
-      const { stream } = streamFlow<GameCharacters>({
-        url: 'stream-characters',
-        input: count,
-      });
-      (async () => {
-        try {
-          for await (const chunk of stream) {
-            console.log('Received chunk:', JSON.stringify(chunk, null, 2));
-            // Update the signal with the latest full chunk (assuming chunk is GameCharacters)
-            gameCharacters.set({ value: chunk });
-          }
-        } catch (err) {
-          console.error('Stream error:', err);
-          // Optionally update the signal with an error state
-          // gameCharacters.set({ error: err });
-        }
-      })();
+      this.processCharacterStream(gameCharacters, count);
 
       abortSignal.addEventListener('abort', () => {
         console.log('Stream aborted, cleanup if necessary');
@@ -86,4 +69,23 @@ export class StreamingExampleComponent {
     },
     defaultValue: [],
   });
+
+  private async processCharacterStream(
+    signalToUpdate: WritableSignal<StreamItem>,
+    count: number,
+  ) {
+    try {
+      const { stream } = streamFlow<GameCharacters>({
+        url: 'stream-characters',
+        input: count,
+      });
+
+      for await (const chunk of stream) {
+        signalToUpdate.set({ value: chunk });
+      }
+    } catch (err: unknown) {
+      console.error('Stream error:', err);
+      // signalToUpdate.set({ error: err });
+    }
+  }
 }
