@@ -13,6 +13,9 @@ import {
   streamCharacters,
   structuredMenuSuggestionFlow,
 } from './genkit';
+import { UserFacingError } from 'genkit';
+import { RequestData } from 'genkit/context';
+import { ContextProvider } from 'genkit/context';
 
 const serverDistFolder = dirname(fileURLToPath(import.meta.url));
 const browserDistFolder = resolve(serverDistFolder, '../browser');
@@ -33,7 +36,24 @@ const angularApp = new AngularNodeAppEngine();
  */
 app.use(express.json());
 
-app.post('/menu', expressHandler(menuSuggestionFlow));
+interface Context {
+  auth: {
+    user: string;
+  };
+}
+
+const contextProvider: ContextProvider<Context> = (req: RequestData) => {
+  if (req.headers['authorization'] !== 'open sesame') {
+    throw new UserFacingError('PERMISSION_DENIED', 'not authorized');
+  }
+  return {
+    auth: {
+      user: 'Ali Baba',
+    },
+  };
+};
+
+app.post('/menu', expressHandler(menuSuggestionFlow, { contextProvider }));
 app.post('/structured-menu', expressHandler(structuredMenuSuggestionFlow));
 app.post('/stream-characters', expressHandler(streamCharacters));
 

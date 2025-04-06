@@ -17,8 +17,16 @@ import { FormsModule } from '@angular/forms';
 export class BasicExampleComponent {
   menuInput = '';
   theme = signal('');
+
   menuResource = resource({
     request: () => this.theme(),
-    loader: ({ request }) => runFlow<string>({ url: 'menu', input: request }),
+    loader: ({ request }) =>
+      runFlow<string>({
+        url: 'menu',
+        input: request,
+        headers: {
+          Authorization: 'open sesame',
+        },
+      }),
   });
 }
