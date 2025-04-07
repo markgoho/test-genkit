@@ -1,11 +1,13 @@
 import { gemini20Flash, googleAI } from '@genkit-ai/googleai';
-import { genkit } from 'genkit';
+import { genkit, MessageData } from 'genkit';
 import { z } from '@genkit-ai/core';
 import {
   GameCharactersSchema,
   MenuItemSchema,
 } from './app/output-schema/menu-item.schema';
 import { parse, Allow } from 'partial-json';
+import { HistoryStore } from './agent';
+import { defineAgent } from './agent';
 
 const ai = genkit({
   plugins: [googleAI()],
@@ -84,4 +86,58 @@ function maybeStripMarkdown(withMarkdown: string) {
     return withMarkdown;
   }
   return mdMatch[2];
+}
+
+const weatherTool = ai.defineTool(
+  {
+    name: 'weatherTool',
+    description: 'use this tool to display weather',
+    inputSchema: z.object({
+      date: z
+        .string()
+        .describe('date (use datePicker tool if user did not specify)'),
+      location: z.string().describe('location (ZIP, city, etc.)'),
+    }),
+    outputSchema: z.string().optional(),
+  },
+  async () => undefined,
+);
+
+const datePicker = ai.defineTool(
+  {
+    name: 'datePicker',
+    description:
+      'user can use this UI tool to enter a date (prefer this over asking the user to enter the date manually)',
+    inputSchema: z.object({
+      ignore: z.string().describe('ignore this (set to undefined)').optional(),
+    }),
+    outputSchema: z.string().optional(),
+  },
+  async () => undefined,
+);
+
+export const chatbotFlow = defineAgent(ai, {
+  name: 'chatbotFlow',
+  model: gemini20Flash,
+  tools: [weatherTool, datePicker],
+  returnToolRequests: true,
+  systemPrompt:
+    'You are a helpful agent. You have the personality of Agent Smith from Matrix. ' +
+    'There are tools/functions at your disposal, ' +
+    'feel free to call them. If you think a tool/function can help but you do ' +
+    'not have sufficient context make sure to ask clarifying questions.',
+  historyStore: inMemoryStore(),
+});
+
+const chatHistory: Record<string, MessageData[]> = {};
+
+function inMemoryStore(): HistoryStore {
+  return {
+    async load(id: string): Promise<MessageData[] | undefined> {
+      return chatHistory[id];
+    },
+    async save(id: string, history: MessageData[]) {
+      chatHistory[id] = history;
+    },
+  };
 }

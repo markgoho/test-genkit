@@ -1,0 +1,57 @@
+<div class="wrapper">
+  <h3>Chat with Agent Smith</h3>
+
+  @for (entry of history; track entry; let i = $index) {
+    <div>
+      @if (entry.role === "user") {
+        <div class="user-bubble">
+          {{ entry.text }}
+        </div>
+      }
+      @if (entry.role === "model") {
+        <div class="model-bubble">
+          @if (entry.text) {
+            <span class="text">{{ entry.text }}</span>
+          }
+          @if (entry.toolRequest) {
+            <div>
+              <div>
+                @switch (entry.toolRequest.name) {
+                  @case ("weatherTool") {
+                    <div class="weather-tool">
+                      <h4>{{ getWeatherLocation(entry.toolRequest) }} 27°C</h4>
+                      <div>Warn sunny day with a mix of sun and snow.</div>
+                    </div>
+                  }
+                  @case ("datePicker") {
+                    <div>
+                      <label>Choose a date</label>
+                      <input type="date" />
+                      <!-- <input
+                        type="date"
+                        (dateChange)="datePicked(entry.toolRequest, $event)"
+                      /> -->
+                    </div>
+                  }
+                  @default {
+                    <div>Oops... unknown tool {{ entry.toolRequest.name }}</div>
+                  }
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <form>
+    <label>Chat input</label>
+    <textarea [formControl]="chatFormControl" placeholder="Hi..."></textarea>
+    @if (loading) {
+      <div>Loading...</div>
+    }
+
+    <button (click)="ask(input)" [disabled]="loading">send</button>
+  </form>
+</div>

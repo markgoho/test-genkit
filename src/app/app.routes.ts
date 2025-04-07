@@ -14,6 +14,11 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'chat',
+    loadComponent: () =>
+      import('./chat/chat.component').then((m) => m.ChatComponent),
+  },
+  {
     path: 'streaming',
     loadComponent: () =>
       import('./streaming-example.component').then(

@@ -12,6 +12,7 @@ import {
   menuSuggestionFlow,
   streamCharacters,
   structuredMenuSuggestionFlow,
+  chatbotFlow,
 } from './genkit';
 import { UserFacingError } from 'genkit';
 import { RequestData } from 'genkit/context';
@@ -56,6 +57,7 @@ const contextProvider: ContextProvider<Context> = (req: RequestData) => {
 app.post('/menu', expressHandler(menuSuggestionFlow, { contextProvider }));
 app.post('/structured-menu', expressHandler(structuredMenuSuggestionFlow));
 app.post('/stream-characters', expressHandler(streamCharacters));
+app.post('/chatbot', expressHandler(chatbotFlow));
 
 /**
  * Serve static files from /browser
