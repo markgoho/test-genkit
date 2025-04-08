@@ -1,0 +1,10 @@
+---
+description: 
+globs: *.ts
+alwaysApply: false
+---
+
+# No `as any` in order to access property
+
+- never type an unknown object `as any` in order to access a property you think exists on it
+

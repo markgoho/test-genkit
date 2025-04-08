@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "dev": "npx genkit start -- ng serve",
+    "genkit:dev": "genkit start -- tsx --watch src/genkit-standalone.ts",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
@@ -46,7 +48,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "prettier": "^3.5.3",
-    "tsk": "^0.3.2",
+    "tsx": "^4.19.3",
     "typescript": "~5.7.2"
   }
 }

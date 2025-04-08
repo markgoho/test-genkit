@@ -7,7 +7,7 @@ import {
 } from './app/output-schema/menu-item.schema';
 import { parse, Allow } from 'partial-json';
 
-const ai = genkit({
+export const ai = genkit({
   plugins: [googleAI()],
   model: gemini20Flash,
 });
