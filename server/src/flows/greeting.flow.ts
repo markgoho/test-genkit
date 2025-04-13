@@ -1,5 +1,5 @@
 // src/index.ts
-import * as z from 'zod';
+import { z } from 'zod';
 // Revert imports to use the local ai instance
 import { ai } from '../genkit';
 import { gemini15Flash } from '@genkit-ai/googleai';
@@ -45,7 +45,7 @@ const generateMorningGreeting = ai.defineTool(
     });
     // Revert to property access based on original code
     return llmResponse.text;
-  },
+  }
 );
 
 // Tool 2: Afternoon Greeting
@@ -70,7 +70,7 @@ const generateAfternoonGreeting = ai.defineTool(
     });
     // Revert to property access based on original code
     return llmResponse.text;
-  },
+  }
 );
 
 // Tool 3: Evening Greeting
@@ -95,7 +95,7 @@ const generateEveningGreeting = ai.defineTool(
     });
     // Revert to property access based on original code
     return llmResponse.text;
-  },
+  }
 );
 
 // Define the main flow
@@ -135,7 +135,7 @@ export const selectGreetingFlow = ai.defineFlow(
     // Log the entire response for debugging
     console.log(
       'Inspecting llmResponse:',
-      JSON.stringify(llmResponse, null, 2),
+      JSON.stringify(llmResponse, null, 2)
     );
 
     // Extract text from the message content
@@ -151,11 +151,11 @@ export const selectGreetingFlow = ai.defineFlow(
       // If text is missing from the expected location
       console.error(
         'LLM response did not contain text in message.content[0].text',
-        JSON.stringify(llmResponse, null, 2),
+        JSON.stringify(llmResponse, null, 2)
       );
       throw new Error(
-        'Failed to generate greeting: LLM response format unexpected.',
+        'Failed to generate greeting: LLM response format unexpected.'
       );
     }
-  },
+  }
 );

@@ -2,7 +2,6 @@ import * as z from 'zod';
 import { ai } from '../genkit'; // Assuming your genkit setup is here
 import { gemini15Flash } from '@genkit-ai/googleai';
 
-
 // Input for the tool: Character ID
 const FetchToolInputSchema = z.object({
   characterId: z.number().int().positive(),
@@ -17,6 +16,8 @@ const FetchToolOutputSchema = z
     birth_year: z.string(),
   })
   .nullable(); // Allow null if character not found or error
+
+type FetchToolOutput = z.infer<typeof FetchToolOutputSchema>;
 
 // Input for the flow: Natural language request
 const CharacterFlowRequestSchema = z.object({
@@ -52,14 +53,14 @@ const fetchCharacterTool = ai.defineTool(
         }
         throw new Error(`SWAPI request failed with status ${response.status}`);
       }
-      const data = await response.json();
+      const data = (await response.json()) as FetchToolOutput;
       // Validate and select specific fields
       // Use safeParse to handle potential validation errors gracefully
       const parseResult = FetchToolOutputSchema.safeParse({
-        name: data.name,
-        height: data.height,
-        mass: data.mass,
-        birth_year: data.birth_year,
+        name: data?.name,
+        height: data?.height,
+        mass: data?.mass,
+        birth_year: data?.birth_year,
       });
       if (parseResult.success) {
         console.log(`[fetchCharacterTool] Fetched data:`, parseResult.data);

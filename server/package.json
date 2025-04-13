@@ -1,10 +1,10 @@
 {
   "name": "server",
-  "module": "index.ts",
+  "module": "src/index.ts",
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "genkit start -- bun --hot index.ts"
+    "dev": "genkit start -- bun --hot src/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest",

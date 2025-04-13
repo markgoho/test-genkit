@@ -62,7 +62,8 @@
               "buildTarget": "test-genkit:build:production"
             },
             "development": {
-              "buildTarget": "test-genkit:build:development"
+              "buildTarget": "test-genkit:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
@@ -87,5 +88,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

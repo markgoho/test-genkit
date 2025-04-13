@@ -1,7 +1,7 @@
 // src/calculator.flow.ts
-import * as z from 'zod';
-import { ai } from '../genkit'; // Assuming your genkit setup is here
+import { z } from 'zod';
 import { gemini15Flash } from '@genkit-ai/googleai';
+import { ai } from '../genkit';
 
 // Define Schemas
 const CalculationInputSchema = z.object({
@@ -28,7 +28,7 @@ const addTool = ai.defineTool(
   async (input) => {
     console.log(`[addTool] Adding ${input.num1} and ${input.num2}`);
     return input.num1 + input.num2; // Directly return the number
-  },
+  }
 );
 
 // Tool 2: Multiply
@@ -42,7 +42,7 @@ const multiplyTool = ai.defineTool(
   async (input) => {
     console.log(`[multiplyTool] Multiplying ${input.num1} and ${input.num2}`);
     return input.num1 * input.num2; // Directly return the number
-  },
+  }
 );
 
 // Define the main Calculator Flow
@@ -89,15 +89,15 @@ export const calculatorFlow = ai.defineFlow(
 
     if (textResult) {
       console.debug(
-        `[calculatorFlow] Extracted Text Response: "${textResult}"`,
+        `[calculatorFlow] Extracted Text Response: "${textResult}"`
       );
       return textResult; // This is the final string answer
     } else {
       console.error(
         '[calculatorFlow] LLM response did not contain text in message.content[0].text',
-        JSON.stringify(llmResponse, null, 2),
+        JSON.stringify(llmResponse, null, 2)
       );
       throw new Error('Failed to calculate: LLM response format unexpected.');
     }
-  },
+  }
 );

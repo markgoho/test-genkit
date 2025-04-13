@@ -8,10 +8,8 @@ import { FormsModule } from '@angular/forms';
     <input type="text" [(ngModel)]="menuInput" />
     <button (click)="this.theme.set(menuInput)">Generate</button>
     <br />
-    @if (menuResource.isLoading()) {
-      Loading...
-    } @else {
-      <pre>{{ menuResource.value() }}</pre>
+    @if (menuResource.isLoading()) { Loading... } @else {
+    <pre>{{ menuResource.value() }}</pre>
     }`,
 })
 export class BasicExampleComponent {
@@ -22,11 +20,8 @@ export class BasicExampleComponent {
     request: () => this.theme(),
     loader: ({ request }) =>
       runFlow<string>({
-        url: 'menu',
+        url: '/flows/menu',
         input: request,
-        headers: {
-          Authorization: 'open sesame',
-        },
       }),
   });
 }

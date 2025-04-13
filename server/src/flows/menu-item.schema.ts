@@ -1,4 +1,4 @@
-import { z } from '@genkit-ai/core';
+import { z } from 'zod';
 
 export const MenuItemSchema = z.object({
   name: z.string(),
@@ -13,7 +13,7 @@ export const GameCharactersSchema = z.array(
   z.object({
     name: z.string(),
     description: z.string(),
-  }),
+  })
 );
 
 export type GameCharacters = z.infer<typeof GameCharactersSchema>;

@@ -23,11 +23,10 @@ type StreamItem = { value: GameCharacters };
     <input type="number" [(ngModel)]="count" />
     <button (click)="this.characterCount.set(count)">Generate</button>
 
-    @let characters = gameCharactersResource.value();
-
-    @for (character of characters; track character.name) {
-      <h2>{{ character.name }}</h2>
-      <p>{{ character.description }}</p>
+    @let characters = gameCharactersResource.value(); @for (character of
+    characters; track character.name) {
+    <h2>{{ character.name }}</h2>
+    <p>{{ character.description }}</p>
     }
   `,
   styles: [
@@ -72,11 +71,11 @@ export class StreamingExampleComponent {
 
   private async processCharacterStream(
     signalToUpdate: WritableSignal<StreamItem>,
-    count: number,
+    count: number
   ) {
     try {
-      const { stream } = streamFlow<GameCharacters>({
-        url: 'stream-characters',
+      const { stream } = streamFlow<string, GameCharacters>({
+        url: '/flows/streamCharacters',
         input: count,
       });
 

@@ -4,7 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "cd server && genkit start -- bun --hot index.ts"
+    "server": "cd server && bun run dev",
+    "ui": "cd ui && bun run start"
   },
   "devDependencies": {
     "@types/bun": "latest"
