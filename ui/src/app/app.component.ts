@@ -10,6 +10,7 @@ import { RouterOutlet, RouterLink } from '@angular/router';
         <li><a routerLink="/basic">Basic</a></li>
         <li><a routerLink="/structured">Structured</a></li>
         <li><a routerLink="/streaming">Streaming</a></li>
+        <li><a routerLink="/simple-chatbot">Simple Chatbot</a></li>
       </ul>
     </nav>
     <router-outlet />`,

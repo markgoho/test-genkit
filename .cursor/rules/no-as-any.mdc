@@ -8,3 +8,7 @@ alwaysApply: false
 
 - never type an unknown object `as any` in order to access a property you think exists on it
 
+# Strict and narrow types
+
+- always try to find the "right" type or interface for an object
+- narrower types are preferrerd to broader ones

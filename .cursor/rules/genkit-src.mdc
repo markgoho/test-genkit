@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+
+# Genkit src
+
+- I've included the genkit js-based src code here: /genkit-src/js
+- When I ask you to help create something using Genkit, make sure to use this source code to guide you

@@ -1,4 +1,4 @@
-import * as z from 'zod';
+import { z } from 'zod';
 import { ai } from '../genkit'; // Assuming your genkit setup is here
 import { gemini15Flash } from '@genkit-ai/googleai';
 

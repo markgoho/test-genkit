@@ -1,5 +1,5 @@
 import { gemini20Flash, googleAI } from '@genkit-ai/googleai';
-import { genkit } from 'genkit';
+import { genkit } from 'genkit/beta';
 import { z } from 'zod';
 import { parse, Allow } from 'partial-json';
 import { GameCharactersSchema, MenuItemSchema } from './flows/menu-item.schema';

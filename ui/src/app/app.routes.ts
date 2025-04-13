@@ -21,6 +21,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'simple-chatbot',
+    loadComponent: () =>
+      import('./simple-chatbot.component').then(
+        (m) => m.SimpleChatbotComponent,
+      ),
+  },
+  {
     path: '**',
     redirectTo: 'basic',
   },

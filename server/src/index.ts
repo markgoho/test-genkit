@@ -7,7 +7,7 @@ import {
 import { calculatorFlow } from './flows/calculator.flow';
 import { characterInfoFlow } from './flows/swapi.flow';
 import { selectGreetingFlow } from './flows/greeting.flow';
-
+import { simpleChatbotFlow } from './flows/simple-chatbot.flow';
 startFlowServer({
   flows: [
     menuSuggestionFlow,
@@ -16,5 +16,6 @@ startFlowServer({
     calculatorFlow,
     characterInfoFlow,
     selectGreetingFlow,
+    simpleChatbotFlow,
   ],
 });
