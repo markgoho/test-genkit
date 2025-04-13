@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { ai } from '../genkit';
-// Remove geminiPro import if it exists
 
 export const simpleChatbotFlow = ai.defineFlow(
   {
@@ -36,5 +35,5 @@ export const simpleChatbotFlow = ai.defineFlow(
 
     // Return void as the primary output is streamed
     return;
-  }
+  },
 );
