@@ -1,9 +1,4 @@
-import {
-  Component,
-  signal,
-  WritableSignal,
-  ChangeDetectionStrategy,
-} from '@angular/core';
+import { Component, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { streamFlow } from 'genkit/beta/client';
 import { CommonModule } from '@angular/common';
@@ -26,25 +21,26 @@ interface ChatMessage {
     <!-- Chat History Display -->
     <div class="chat-history">
       @for (message of history(); track message; let i = $index) {
-      <div class="message" [ngClass]="message.role">
-        <strong>{{ message.role === 'user' ? 'You' : 'Pirate Bot' }}:</strong>
-        <!-- Use the markdown component -->
-        @if (message.role === 'bot') {
-        <markdown [data]="message.content"></markdown>
-        } @else {
-        <span>{{ message.content }}</span>
-        }
-      </div>
-      } @if (loading()) {
-      <div class="message bot">
-        <strong>Pirate Bot:</strong>
-        <span>Thinking...</span>
-      </div>
+        <div class="message" [ngClass]="message.role">
+          <strong>{{ message.role === 'user' ? 'You' : 'Pirate Bot' }}:</strong>
+          <!-- Use the markdown component -->
+          @if (message.role === 'bot') {
+            <markdown [data]="message.content"></markdown>
+          } @else {
+            <span>{{ message.content }}</span>
+          }
+        </div>
+      }
+      @if (loading()) {
+        <div class="message bot">
+          <strong>Pirate Bot:</strong>
+          <span>Thinking...</span>
+        </div>
       }
     </div>
 
     @if (errorMessage()) {
-    <p class="error-message">Error: {{ errorMessage() }}</p>
+      <p class="error-message">Error: {{ errorMessage() }}</p>
     }
 
     <!-- Input Area -->
@@ -56,12 +52,7 @@ interface ChatMessage {
         (keyup.enter)="sendMessage()"
         [disabled]="loading()"
       />
-      <button
-        (click)="sendMessage()"
-        [disabled]="loading() || !userMessage.trim()"
-      >
-        Send
-      </button>
+      <button (click)="sendMessage()" [disabled]="loading() || !userMessage.trim()">Send</button>
     </div>
   `,
   styles: [
@@ -130,10 +121,7 @@ export class SimpleChatbotComponent {
     }
 
     // 1. Add user message to history
-    this.history.update((current) => [
-      ...current,
-      { role: 'user', content: messageToSend },
-    ]);
+    this.history.update((current) => [...current, { role: 'user', content: messageToSend }]);
 
     // 2. Add bot placeholder & start loading
     this.loading.set(true);
@@ -168,14 +156,11 @@ export class SimpleChatbotComponent {
       }
       // Stream completed without throwing during the loop
     } catch (err: unknown) {
-      const errorText =
-        err instanceof Error ? err.message : 'An unknown error occurred.';
+      const errorText = err instanceof Error ? err.message : 'An unknown error occurred.';
 
       // Check if it's the specific termination chunk error
       if (errorText === 'unkown chunk format: {}') {
-        console.warn(
-          'Stream finished with expected termination chunk format error. Ignoring.'
-        );
+        console.warn('Stream finished with expected termination chunk format error. Ignoring.');
         // Treat as success, don't set error message or update history further
       } else {
         // Handle actual errors

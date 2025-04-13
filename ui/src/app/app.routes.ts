@@ -10,21 +10,28 @@ export const routes: Routes = [
     path: 'structured',
     loadComponent: () =>
       import('./structured-output.component').then(
-        (m) => m.StructuredOutputComponent,
+        (m) => m.StructuredOutputComponent
       ),
   },
   {
     path: 'streaming',
     loadComponent: () =>
       import('./streaming-example.component').then(
-        (m) => m.StreamingExampleComponent,
+        (m) => m.StreamingExampleComponent
       ),
   },
   {
     path: 'simple-chatbot',
     loadComponent: () =>
       import('./simple-chatbot.component').then(
-        (m) => m.SimpleChatbotComponent,
+        (m) => m.SimpleChatbotComponent
+      ),
+  },
+  {
+    path: 'chatbot-with-tools',
+    loadComponent: () =>
+      import('./chatbot-with-tools.component').then(
+        (m) => m.ChatbotWithToolsComponent
       ),
   },
   {

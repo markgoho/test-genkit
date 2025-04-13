@@ -8,9 +8,7 @@ import { JsonPipe } from '@angular/common';
   imports: [FormsModule, JsonPipe],
   template: `<h3>Structured menu item</h3>
     <input type="text" [(ngModel)]="structuredMenuInput" />
-    <button (click)="this.structuredMenuTheme.set(structuredMenuInput)">
-      Generate
-    </button>
+    <button (click)="this.structuredMenuTheme.set(structuredMenuInput)">Generate</button>
     @if (structuredMenuResource.isLoading()) {
       Loading...
     } @else {

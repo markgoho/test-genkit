@@ -1,10 +1,4 @@
-import {
-  Component,
-  resource,
-  ResourceRef,
-  signal,
-  WritableSignal,
-} from '@angular/core';
+import { Component, resource, ResourceRef, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { streamFlow } from 'genkit/beta/client';
 import { ResourceLoaderParams } from '@angular/core';
@@ -23,10 +17,10 @@ type StreamItem = { value: GameCharacters };
     <input type="number" [(ngModel)]="count" />
     <button (click)="this.characterCount.set(count)">Generate</button>
 
-    @let characters = gameCharactersResource.value(); @for (character of
-    characters; track character.name) {
-    <h2>{{ character.name }}</h2>
-    <p>{{ character.description }}</p>
+    @let characters = gameCharactersResource.value();
+    @for (character of characters; track character.name) {
+      <h2>{{ character.name }}</h2>
+      <p>{{ character.description }}</p>
     }
   `,
   styles: [
@@ -44,15 +38,9 @@ export class StreamingExampleComponent {
 
   characterCount = signal('3');
 
-  gameCharactersResource: ResourceRef<GameCharacters> = resource<
-    GameCharacters,
-    string
-  >({
+  gameCharactersResource: ResourceRef<GameCharacters> = resource<GameCharacters, string>({
     request: () => this.characterCount(),
-    stream: async ({
-      request,
-      abortSignal,
-    }: ResourceLoaderParams<string>): Promise<WritableSignal<StreamItem>> => {
+    stream: async ({ request, abortSignal }: ResourceLoaderParams<string>): Promise<WritableSignal<StreamItem>> => {
       const count = parseInt(request);
       const gameCharacters = signal<StreamItem>({ value: [] });
 
@@ -69,10 +57,7 @@ export class StreamingExampleComponent {
     defaultValue: [],
   });
 
-  private async processCharacterStream(
-    signalToUpdate: WritableSignal<StreamItem>,
-    count: number
-  ) {
+  private async processCharacterStream(signalToUpdate: WritableSignal<StreamItem>, count: number) {
     try {
       const { stream } = streamFlow<string, GameCharacters>({
         url: '/flows/streamCharacters',
