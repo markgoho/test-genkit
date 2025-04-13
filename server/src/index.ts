@@ -5,6 +5,7 @@ import { characterInfoFlow } from './flows/swapi.flow';
 import { selectGreetingFlow } from './flows/greeting.flow';
 import { simpleChatbotFlow } from './flows/simple-chatbot.flow';
 import { chatbotWithToolsFlow } from './flows/chatbot-with-tools.flow';
+import { chatbotWithToolResponsesFlow } from './flows/chatbot-with-tool-responses.flow';
 startFlowServer({
   flows: [
     menuSuggestionFlow,
@@ -15,5 +16,6 @@ startFlowServer({
     selectGreetingFlow,
     simpleChatbotFlow,
     chatbotWithToolsFlow,
+    chatbotWithToolResponsesFlow,
   ],
 });
