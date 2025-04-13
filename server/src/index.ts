@@ -6,6 +6,8 @@ import { selectGreetingFlow } from './flows/greeting.flow';
 import { simpleChatbotFlow } from './flows/simple-chatbot.flow';
 import { chatbotWithToolsFlow } from './flows/chatbot-with-tools.flow';
 import { chatbotWithToolResponsesFlow } from './flows/chatbot-with-tool-responses.flow';
+import { multiAgentTravelFlow } from './flows/travel-agent.flow';
+
 startFlowServer({
   flows: [
     menuSuggestionFlow,
@@ -17,5 +19,6 @@ startFlowServer({
     simpleChatbotFlow,
     chatbotWithToolsFlow,
     chatbotWithToolResponsesFlow,
+    multiAgentTravelFlow,
   ],
 });
