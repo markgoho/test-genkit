@@ -1,11 +1,8 @@
 import { gemini20Flash, googleAI } from '@genkit-ai/googleai';
 import { genkit } from 'genkit';
-import { z } from '@genkit-ai/core';
-import {
-  GameCharactersSchema,
-  MenuItemSchema,
-} from './app/output-schema/menu-item.schema';
+import { z } from 'zod';
 import { parse, Allow } from 'partial-json';
+import { GameCharactersSchema, MenuItemSchema } from './flows/menu-item.schema';
 
 export const ai = genkit({
   plugins: [googleAI()],
@@ -20,10 +17,10 @@ export const menuSuggestionFlow = ai.defineFlow(
   },
   async (restaurantTheme) => {
     const { text } = await ai.generate(
-      `Invent a menu item for a ${restaurantTheme} themed restaurant.`,
+      `Invent a menu item for a ${restaurantTheme} themed restaurant.`
     );
     return text;
-  },
+  }
 );
 
 export const structuredMenuSuggestionFlow = ai.defineFlow(
@@ -43,7 +40,7 @@ export const structuredMenuSuggestionFlow = ai.defineFlow(
     }
 
     return output;
-  },
+  }
 );
 
 export const streamCharacters = ai.defineFlow(
@@ -54,7 +51,7 @@ export const streamCharacters = ai.defineFlow(
     streamSchema: GameCharactersSchema,
   },
   async (count, { sendChunk }) => {
-    const { response, stream } = await ai.generateStream({
+    const { response, stream } = ai.generateStream({
       model: gemini20Flash,
       output: {
         format: 'json',
@@ -68,17 +65,20 @@ export const streamCharacters = ai.defineFlow(
 
     let buffer = '';
     for await (const chunk of stream) {
-      buffer += chunk.content[0].text!;
+      buffer += chunk.content[0]?.text ?? '';
       if (buffer.length > 10) {
-        sendChunk(parse(maybeStripMarkdown(buffer), Allow.ALL));
+        const stripped = maybeStripMarkdown(buffer);
+        if (typeof stripped === 'string') {
+          sendChunk(parse(stripped, Allow.ALL));
+        }
       }
     }
-    return (await response).text;
-  },
+    return (await response).text ?? '';
+  }
 );
 
 const markdownRegex = /^\s*(```json)?((.|\n)*?)(```)?\s*$/i;
-function maybeStripMarkdown(withMarkdown: string) {
+function maybeStripMarkdown(withMarkdown: string): string | undefined {
   const mdMatch = markdownRegex.exec(withMarkdown);
   if (!mdMatch) {
     return withMarkdown;

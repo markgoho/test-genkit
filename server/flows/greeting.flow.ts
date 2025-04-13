@@ -1,7 +1,7 @@
 // src/index.ts
 import * as z from 'zod';
 // Revert imports to use the local ai instance
-import { ai } from './genkit';
+import { ai } from '../genkit';
 import { gemini15Flash } from '@genkit-ai/googleai';
 
 // Import the specific model reference you want to use from the configured plugin

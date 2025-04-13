@@ -1,6 +1,6 @@
 // src/calculator.flow.ts
 import * as z from 'zod';
-import { ai } from './genkit'; // Assuming your genkit setup is here
+import { ai } from '../genkit'; // Assuming your genkit setup is here
 import { gemini15Flash } from '@genkit-ai/googleai';
 
 // Define Schemas

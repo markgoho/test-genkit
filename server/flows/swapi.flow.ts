@@ -1,9 +1,7 @@
-// src/swapi.flow.ts
 import * as z from 'zod';
-import { ai } from './genkit'; // Assuming your genkit setup is here
+import { ai } from '../genkit'; // Assuming your genkit setup is here
 import { gemini15Flash } from '@genkit-ai/googleai';
 
-// --- Schemas ---
 
 // Input for the tool: Character ID
 const FetchToolInputSchema = z.object({
@@ -40,7 +38,7 @@ const fetchCharacterTool = ai.defineTool(
   },
   async (input) => {
     console.log(
-      `[fetchCharacterTool] Fetching character ID: ${input.characterId}`,
+      `[fetchCharacterTool] Fetching character ID: ${input.characterId}`
     );
     const url = `https://swapi.dev/api/people/${input.characterId}/`;
     try {
@@ -48,7 +46,7 @@ const fetchCharacterTool = ai.defineTool(
       if (!response.ok) {
         if (response.status === 404) {
           console.warn(
-            `[fetchCharacterTool] Character ID ${input.characterId} not found (404).`,
+            `[fetchCharacterTool] Character ID ${input.characterId} not found (404).`
           );
           return null; // Return null for not found
         }
@@ -69,19 +67,19 @@ const fetchCharacterTool = ai.defineTool(
       } else {
         console.error(
           '[fetchCharacterTool] Failed to parse SWAPI response:',
-          parseResult.error,
+          parseResult.error
         );
         return null; // Return null if parsing fails
       }
     } catch (error) {
       console.error(
         `[fetchCharacterTool] Error fetching character ID ${input.characterId}:`,
-        error,
+        error
       );
       // Decide how to handle errors - returning null is one option
       return null;
     }
-  },
+  }
 );
 
 // --- Flow Definition ---
@@ -125,17 +123,17 @@ export const characterInfoFlow = ai.defineFlow(
 
     if (textResult) {
       console.debug(
-        `[characterInfoFlow] Extracted Text Response: "${textResult}"`,
+        `[characterInfoFlow] Extracted Text Response: "${textResult}"`
       );
       return textResult;
     } else {
       console.error(
         '[characterInfoFlow] LLM response did not contain text in message.content[0].text',
-        JSON.stringify(llmResponse, null, 2),
+        JSON.stringify(llmResponse, null, 2)
       );
       throw new Error(
-        'Failed to get character info: LLM response format unexpected.',
+        'Failed to get character info: LLM response format unexpected.'
       );
     }
-  },
+  }
 );
